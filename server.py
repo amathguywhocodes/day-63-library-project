@@ -63,6 +63,30 @@ def add():
 
     return render_template("add.html")
 
+@app.route("/edit/<int:id>", methods=["GET", "POST"])
+def edit(id):
+
+    book = db.get_or_404(Book, id)
+
+    if request.method == "POST":
+        book.rating = request.form["rating"]
+
+        db.session.commit()
+
+        return redirect(url_for("home"))
+
+    return render_template("edit.html", book=book)
+
+
+# Delete a book from the database and redirect back to the home page.
+@app.route("/delete/<int:id>", methods=["POST"])
+def delete(id):
+    #write here
+    book = db.get_or_404(Book, id)
+    db.session.delete(book)
+    db.session.commit()
+    return redirect(url_for("home"))
+
 
 @app.route('/')
 def home():
